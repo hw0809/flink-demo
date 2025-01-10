@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) throws Exception {
         StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        
+
         env.setParallelism(1);
         env.enableCheckpointing(60000L);
 
