@@ -14,6 +14,7 @@ import org.apache.flink.streaming.api.functions.sink.RichSinkFunction;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.util.Objects;
 
 
 public class Main {
@@ -55,26 +56,29 @@ public class Main {
                     // 假设 record 是 JSON 格式，解析后返回一个数组或自定义对象
 
                     // 解析 JSON 数据
-                    String name = "emptyData";
-                    JsonObject beforeNode = null;
-                    if (!StringUtils.isBlank(record)) {
-                        JsonObject rootNode = JsonParser.parseString(record).getAsJsonObject();
-                        beforeNode = rootNode.getAsJsonObject("before");
-                    }
 
-                    if (beforeNode != null) {
+                    JsonObject rootNode = JsonParser.parseString(record).getAsJsonObject();
+                    JsonObject dataNode = rootNode.has("before") && !rootNode.get("before").isJsonNull()
+                            ? rootNode.getAsJsonObject("before")
+                            : rootNode.has("after") && !rootNode.get("after").isJsonNull()
+                            ? rootNode.getAsJsonObject("after")
+                            : null;
+
+                    if (dataNode != null) {
                         // 提取字段
-                        int id = beforeNode.get("id").getAsInt();
-                        name = beforeNode.get("name").getAsString();
+                        int id = dataNode.get("id").getAsInt();
+                        String name = dataNode.get("name").getAsString();
 
                         System.out.println("Received Record: ID=" + id + ", Name=" + name);
 
                         // 返回自定义对象或其他内容
 //                        return String.format("ID=%d, Name=%s, Value=%d", id, name, value);
+                        return new String[] {name};
                     }
 
-                    return new String[]{name}; // 替换为实际逻辑
+                    return null; // 替换为实际逻辑
                 })
+                .filter(Objects::nonNull) // 过滤掉 null 数据
                 .addSink(new MySQLSink());
 
         env.execute("MySQL CDC to MySQL Sink");
