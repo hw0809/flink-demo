@@ -27,8 +27,16 @@ public class Main {
                 .deserializer(new JsonDebeziumDeserializationSchema()) // converts SourceRecord to JSON String
                 .build();
 
-        env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL-CDC")
+        /*env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL-CDC")
                 .print();
+*/
+        env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL-CDC")
+                .map(record -> {
+                    System.out.println("Received record: " + record);
+                    return record;
+                })
+                .print(); // 将数据打印到标准输出
+
         env.execute();
 
     }
