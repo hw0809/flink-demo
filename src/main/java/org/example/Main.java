@@ -49,8 +49,6 @@ public class Main {
 
         env.execute();*/
 
-        Gson gson = new Gson();
-
         env.fromSource(mySqlSource, WatermarkStrategy.noWatermarks(), "MySQL-CDC")
                 .map(record -> {
                     // 解析 JSON 数据
@@ -59,7 +57,7 @@ public class Main {
                     // 解析 JSON 数据
                     String name = "emptyData";
                     JsonObject beforeNode = null;
-                    if (StringUtils.isBlank(record)) {
+                    if (!StringUtils.isBlank(record)) {
                         JsonObject rootNode = JsonParser.parseString(record).getAsJsonObject();
                         beforeNode = rootNode.getAsJsonObject("before");
                     }
