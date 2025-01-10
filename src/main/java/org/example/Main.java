@@ -21,6 +21,7 @@ public class Main {
                 .tableList("flink-demo.flink-data") // set captured table
                 .username("root")
                 .password("HW000089")
+                .serverTimeZone("Asia/Shanghai") // 指定 MySQL 服务器时区
                 .includeSchemaChanges(true)
                 .startupOptions(StartupOptions.latest())
                 .deserializer(new JsonDebeziumDeserializationSchema()) // converts SourceRecord to JSON String
