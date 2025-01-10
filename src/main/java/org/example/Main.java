@@ -15,7 +15,7 @@ public class Main {
         env.enableCheckpointing(60000L);
 
         MySqlSource<String> mySqlSource = MySqlSource.<String>builder()
-                .hostname("localhost")
+                .hostname("192.168.39.245")
                 .port(3306)
                 .databaseList("flink-demo") // set captured database, If you need to synchronize the whole database, Please set tableList to ".*".
                 .tableList("flink-demo.flink-data") // set captured table
