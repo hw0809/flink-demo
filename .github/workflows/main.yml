@@ -1,0 +1,30 @@
+name: Build Java Project
+
+on:
+  push:
+    branches:
+      - master  # 监控 main 分支的提交事件
+  pull_request: # 或者监控 PR 提交事件
+
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 运行环境
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3  # 拉取仓库代码
+
+    - name: Setup Java
+      uses: actions/setup-java@v3  # 设置 JDK 环境
+      with:
+        distribution: 'temurin'  # JDK 发行版
+        java-version: '8'       # 使用 Java 11
+
+    - name: Build with Maven
+      run: mvn clean package  # 使用 Maven 打包项目
+
+    - name: Upload JAR artifact
+      uses: actions/upload-artifact@v3  # 上传构建产物
+      with:
+        name: jar-artifact
+        path: target/*.jar  # 指定 JAR 文件路径
