@@ -63,7 +63,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>com.example.Main</mainClass> <!-- 替换为你的主类路径 -->
+                            <mainClass>org.example.Main</mainClass> <!-- 替换为你的主类路径 -->
                         </manifest>
                     </archive>
                 </configuration>
